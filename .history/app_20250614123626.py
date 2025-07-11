@@ -1,0 +1,51 @@
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from supabase import create_client, Client
+from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
+from datetime import datetime
+
+app = Flask(__name__, template_folder="templates")
+CORS(app)
+
+# ✅ Supabase Configuration
+SUPABASE_URL = "https://fpzjwfrdqmwvpieysvbo.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwemp3ZnJkcW13dnBpZXlzdmJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MjAzMTgsImV4cCI6MjA2NTE5NjMxOH0.oz3mhk_PAWuodODGIHFUEv93quWQRhMwe6agBmDD2vU"
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# ✅ Serve frontend HTML at root
+@app.route("/")
+def home():
+    return render_template("loginsignup.html")
+
+# ✅ Dashboard route
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+# ✅ Sign-Up Endpoint
+
+# ✅ Login Endpoint
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password_input = data.get('password')
+
+    try:
+        response = supabase.table("admins").select("*").eq("email", email).execute()
+        if response.data:
+            user = response.data[0]
+            if check_password_hash(user['password'], password_input):
+                return jsonify({'status': 'success', 'message': f"Welcome back, {user['username']}!"})
+            else:
+                return jsonify({'status': 'error', 'message': 'Incorrect password'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Email not found'})
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+
+# ✅ Run server
+if __name__ == "__main__":
+    app.run(debug=True)

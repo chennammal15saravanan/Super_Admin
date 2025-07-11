@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome | Super Admin Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+</head>
+<body>
+  <header>
+    <div class="nav-left">
+      <h1>Super Admin Portal</h1>
+    </div>
+    <div class="nav-right">
+      <button onclick="showLoginForm()">Sign In</button>
+      <button onclick="showSignupForm()">Sign Up</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img src="{{ url_for('static', filename='images/superadmin.png') }}" alt="Super Admin Image" class="admin-image" />
+      <div class="about">
+        <h2>About the Super Admin</h2>
+        <p>
+          The Super Admin is the most powerful user in the system. They have complete control over users, permissions, and data flow.
+        </p>
+        <p>
+          They oversee platform operations, handle administrative tasks, manage critical user access, and ensure the security and integrity of the system.
+        </p>
+        <p>
+          With great responsibility, the Super Admin also ensures that the system is running efficiently and users have a seamless experience.
+        </p>
+      </div>
+    </section>
+
+    <!-- Hidden login/signup overlay -->
+    <div class="form-container hidden" id="form-container">
+      <div class="form-box">
+        <span class="close-btn" onclick="closeForms()">&times;</span>
+
+        <!-- Login Form -->
+        <form id="login-form" class="hidden">
+          <h2>Sign In</h2>
+          <input type="email" id="login-email" placeholder="Email" required />
+          <input type="password" id="login-password" placeholder="Password" required />
+          <button type="submit">Login</button>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signup-form" class="hidden">
+          <h2>Sign Up</h2>
+          <input type="text" id="signup-username" placeholder="Username" required />
+          <input type="email" id="signup-email" placeholder="Email" required />
+          <input type="password" id="signup-password" placeholder="Password" required />
+          <button type="submit">Register</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+  <script>
+    function showLoginForm() {
+      document.getElementById("form-container").classList.remove("hidden");
+      document.getElementById("login-form").classList.remove("hidden");
+      document.getElementById("signup-form").classList.add("hidden");
+    }
+
+    function showSignupForm() {
+      document.getElementById("form-container").classList.remove("hidden");
+      document.getElementById("signup-form").classList.remove("hidden");
+      document.getElementById("login-form").classList.add("hidden");
+    }
+
+    function closeForms() {
+      document.getElementById("form-container").classList.add("hidden");
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("signup-form").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

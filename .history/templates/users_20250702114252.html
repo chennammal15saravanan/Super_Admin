@@ -1,0 +1,35 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<h1>Users List</h1>
+
+<table id="usersTable" border="1">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        <a href="/users/{{ user.user_id }}/queries">View Queries</a> |
+        <a href="/users/{{ user.user_id }}/responses">View Responses</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+    $('#usersTable').DataTable();
+  });
+</script>
+{% endblock %}

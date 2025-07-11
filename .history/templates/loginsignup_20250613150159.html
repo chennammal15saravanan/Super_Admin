@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Sign-Up</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>    
+body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 350px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: blue;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .toggle-text a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    label {
+      font-size: 14px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .checkbox {
+      margin-bottom: 15px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .checkbox input {
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Login Form (shown first) -->
+    <form id="login-form">
+      <h2>Welcome Back!</h2>
+      <input type="email" id="login-email" placeholder="Enter your email" required />
+      <input type="password" id="login-password" placeholder="Enter your password" required />
+      <button type="submit">Login</button>
+      <div class="toggle-text">
+        Don’t have an account? <a onclick="showSignUp()">Sign up here</a>
+      </div>
+    </form>
+
+    <!-- Sign-Up Form (hidden initially) -->
+    <form id="signup-form" class="hidden">
+      <h2>Create Your Account</h2>
+      <input type="text" id="signup-username" placeholder="Enter a unique username" required />
+      <input type="email" id="signup-email" placeholder="Enter your email" required />
+      <input type="password" id="signup-password" placeholder="Create a strong password" required />
+      <input type="password" id="signup-repassword" placeholder="Re-enter your password" required />
+      <div class="checkbox">
+        <label><input type="checkbox" id="terms" required /> I agree to the Terms and Conditions</label>
+      </div>
+      <button type="submit">Sign Up</button>
+      <div class="toggle-text">
+        Already have an account? <a onclick="showLogin()">Login here</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+  function showLogin() {
+    document.getElementById("signup-form").classList.add("hidden");
+    document.getElementById("login-form").classList.remove("hidden");
+  }
+
+  function showSignUp() {
+    document.getElementById("login-form").classList.add("hidden");
+    document.getElementById("signup-form").classList.remove("hidden");
+  }
+
+  // Sign-Up Form Submission
+ document.querySelector("form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    
+    const email = document.querySelector("input[type='email']").value;
+    const password = document.querySelector("input[type='password']").value;
+
+    const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+        alert(data.message);
+        window.location.href = "/dashboard";  // 🔁 redirect to dashboard
+    } else {
+        alert(data.message);
+    }
+});
+
+
+  // Login Form Submission
+  document.getElementById("login-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        alert("🔓 " + result.message);
+        // TODO: Redirect or show dashboard page here
+      } else {
+        alert("❌ " + result.message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("⚠️ Failed to connect to the server.");
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<h2>User {{ user_id }} — Uploads</h2>
+<table id="uploads-table" class="display">
+  <thead><tr><th>ID</th><th>Name</th><th>Time</th></tr></thead>
+  <tbody>
+    {% for u in uploads %}
+      <tr>
+        <td>{{ u.file_id }}</td>
+        <td>{{ u.file_name }}</td>
+        <td>{{ u.upload_time }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script>
+$(document).ready(function(){
+  $('#uploads-table').DataTable();
+});
+</script>
+{% endblock %}

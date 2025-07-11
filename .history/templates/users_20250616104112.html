@@ -1,0 +1,32 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<h2>All Users</h2>
+<table id="users-table" class="display">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Datasets</th>
+      <th>Uploads</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for u in users %}
+    <tr>
+      <td>{{ u.username }}</td>
+      <td>{{ u.email }}</td>
+      <td><a href="{{ url_for('user_datasets', user_id=u.id) }}">View</a></td>
+      <td><a href="{{ url_for('user_uploads', user_id=u.id) }}">View</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+  $('#users-table').DataTable();
+});
+</script>
+{% endblock %}

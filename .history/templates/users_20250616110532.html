@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Datasets</th>
+      <th>Uploads</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td><a href="{{ url_for('user_datasets', user_id=user.user_id) }}">View</a></td>
+      <td><a href="{{ url_for('user_uploads', user_id=user.user_id) }}">View</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

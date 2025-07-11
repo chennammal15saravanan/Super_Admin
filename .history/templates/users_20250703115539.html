@@ -1,0 +1,126 @@
+{% block scripts %}
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<style>
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  width: 70%;
+  max-height: 80%;
+  overflow-y: auto;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 6px 10px;
+  margin: 2px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #0056b3;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  $('#usersTable').DataTable({
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100]
+  });
+
+  const modal = $('#popupModal');
+  const content = $('#popupContent');
+
+  $('.view-queries-btn').on('click', function () {
+    const userId = $(this).data('user-id');
+    const url = `/api/users/${userId}/queries`;
+    console.log('Query URL:', url);
+    content.html("Loading queries...");
+    $.getJSON(url, function (data) {
+      if (data.status === 'error') {
+        content.html(`<h3>Queries</h3><p>${data.message}</p>`);
+      } else {
+        const queriesHtml = data.data.length ? data.data.map(q => `<li>${q.query_text} (at ${q.timestamp})</li>`).join('') : '<li>No queries available</li>';
+        content.html(`<h3>Queries</h3><ul>${queriesHtml}</ul>`);
+      }
+      modal.show();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.log('Query Error:', textStatus, errorThrown, jqXHR.status, jqXHR.responseJSON);
+      content.html(`<p>Error loading queries: ${errorThrown} (Status: ${jqXHR.status})</p>`);
+      if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+        content.append(`<p>Details: ${jqXHR.responseJSON.message}</p>`);
+      }
+      modal.show();
+    });
+  });
+
+  $('.view-responses-btn').on('click', function () {
+    const userId = $(this).data('user-id');
+    const url = `/api/users/${userId}/responses`;
+    console.log('Response URL:', url);
+    content.html("Loading responses...");
+    $.getJSON(url, function (data) {
+      if (data.status === 'error') {
+        content.html(`<h3>Responses</h3><p>${data.message}</p>`);
+      } else {
+        const responsesHtml = data.data.length ? data.data.map(r => `<li>${r.response_text} (at ${r.timestamp})</li>`).join('') : '<li>No responses available</li>';
+        content.html(`<h3>Responses</h3><ul>${responsesHtml}</ul>`);
+      }
+      modal.show();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.log('Response Error:', textStatus, errorThrown, jqXHR.status, jqXHR.responseJSON);
+      content.html(`<p>Error loading responses: ${errorThrown} (Status: ${jqXHR.status})</p>`);
+      if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+        content.append(`<p>Details: ${jqXHR.responseJSON.message}</p>`);
+      }
+      modal.show();
+    });
+  });
+
+  $('.close').on('click', function () {
+    modal.hide();
+  });
+
+  $(window).on('click', function (event) {
+    if (event.target.id === "popupModal") {
+      modal.hide();
+    }
+  });
+
+  $(document).on('keydown', function (e) {
+    if (e.key === "Escape") {
+      modal.hide();
+    }
+  });
+});
+</script>
+{% endblock %}

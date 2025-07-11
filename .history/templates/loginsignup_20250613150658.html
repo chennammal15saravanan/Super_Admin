@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Sign-Up</title>
+  
+<body>
+
+  <div class="container">
+    <!-- Login Form -->
+    <form id="login-form">
+      <h2>Welcome Back!</h2>
+      <input type="email" id="login-email" placeholder="Enter your email" required />
+      <input type="password" id="login-password" placeholder="Enter your password" required />
+      <button type="submit">Login</button>
+      <div class="toggle-text">
+        Don’t have an account? <a onclick="showSignUp()">Sign up here</a>
+      </div>
+    </form>
+
+    <!-- Sign-Up Form -->
+    <form id="signup-form" class="hidden">
+      <h2>Create Your Account</h2>
+      <input type="text" id="signup-username" placeholder="Enter username" required />
+      <input type="email" id="signup-email" placeholder="Enter your email" required />
+      <input type="password" id="signup-password" placeholder="Create a password" required />
+      <input type="password" id="signup-repassword" placeholder="Re-enter password" required />
+      <div class="checkbox">
+        <label><input type="checkbox" id="terms" required /> I agree to the Terms</label>
+      </div>
+      <button type="submit">Sign Up</button>
+      <div class="toggle-text">
+        Already have an account? <a onclick="showLogin()">Login here</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
